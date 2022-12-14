@@ -4,6 +4,7 @@ import com.example.firebase.dto.Notification;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class PushNotificationService {
 
     Logger logger = LoggerFactory.getLogger(PushNotificationService.class);
 
+    @Value("${firebase.key}")
+    private String key;
     public PushNotificationService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
@@ -35,7 +38,7 @@ public class PushNotificationService {
 
         httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.set(HttpHeaders.AUTHORIZATION,"key=" + "AAAAZp--Yt0:APA91bHqwuNDjcABRkTURAnF-hv3VuRvgw8JnorcD9PIWxBrw19UXWyuK2S8mKI_mEAFmK2PuGY3UI77rA_rbrXcz5zOr1AQZJq8tjH2_Im_i7hyTeeaDOGN0PSgVZzLc7WW1cUrdZG7");
+        httpHeaders.set(HttpHeaders.AUTHORIZATION,"key=" + key);
         inputString = prepareNotificationContent(token,notification);
         String url = "https://fcm.googleapis.com/fcm/send";
         httpEntity = new HttpEntity<>(inputString,httpHeaders);
